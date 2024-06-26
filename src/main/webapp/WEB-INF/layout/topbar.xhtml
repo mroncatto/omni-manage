@@ -1,0 +1,59 @@
+<ui:composition
+        xmlns="http://www.w3.org/1999/xhtml"
+        xmlns:f="http://xmlns.jcp.org/jsf/core"
+        xmlns:h="http://xmlns.jcp.org/jsf/html"
+        xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+        xmlns:p="http://primefaces.org/ui">
+
+    <h:form>
+        <p:growl id="growl" showDetail="true">
+            <p:autoUpdate/>
+        </p:growl>
+
+    </h:form>
+
+    <div id="top-bar-wrapper">
+        <div id="top-bar">
+            <div class="card">
+                <h:form>
+                    <p:menubar hideDelay="1000" id="panelMenu">
+                        <f:facet name="start">
+                            <p:graphicImage name="images/primefaces-logo.svg" library="layout"/>
+                        </f:facet>
+                        <p:submenu label="Registros" icon="pi pi-fw pi-pencil">
+                            <p:menuitem value="Cuentas" icon="fa fa-bank" outcome="cuentas"/>
+                            <p:menuitem value="Categorias" icon="fa fa-tag" disabled="true"/>
+<!--                            Feature: criar subcategorias-->
+                        </p:submenu>
+
+                        <p:submenu label="Movimientos" icon="pi pi-arrow-right-arrow-left">
+                            <p:menuitem value="Ingresos" icon="fa fa-chevron-up" disabled="true"/>
+                            <p:menuitem value="Egresos" icon="fa fa-chevron-down" disabled="true"/>
+                            <p:menuitem value="Transferencias" icon="fa fa-random" disabled="true"/>
+                        </p:submenu>
+
+                        <p:submenu label="Informes" icon="pi pi-fw pi-file-pdf">
+                            <p:menuitem value="Extracto de cuenta" icon="fa fa-file" disabled="true"/>
+                        </p:submenu>
+
+                        <p:divider layout="vertical"/>
+
+
+                        <f:facet name="end">
+<!--                            <div class="flex flex-row flex-wrap">-->
+<!--                                <div class="flex align-items-center justify-content-center font-bold border-round pr-2">-->
+<!--                                    <p:outputLabel value="User logged"/>-->
+<!--                                </div>-->
+<!--                                <div class="flex align-items-center justify-content-center font-bold border-round">-->
+<!--                                    <p:button value="Logout" icon="pi pi-fw pi-sign-out" styleClass="ui-button-info"/>-->
+<!--                                </div>-->
+<!--                            </div>-->
+                        </f:facet>
+                    </p:menubar>
+                </h:form>
+            </div>
+        </div>
+    </div>
+
+
+</ui:composition>

@@ -1,0 +1,47 @@
+body  {
+    margin: 0;
+    background-color: #fff;
+}
+
+.wrapper {
+    width: 100%;
+    min-height: 100%;
+}
+
+
+#top-bar-wrapper {
+    position: fixed;
+    top: 0;
+    width: 100%;
+    z-index: 101;
+}
+
+#top-bar-wrapper #top-bar {
+    border-bottom: 1px solid #d8d8d8;
+}
+
+#main-wrapper {
+    height: 100%;
+    margin: 0;
+    background-color: #f0f0f0;
+}
+
+.main-content {
+    height: 100%;
+    padding: 100px;
+    /*Falta media queries*/
+}
+
+.user-badge {
+    padding: 4px 8px;
+    border-radius: 15px;
+    color: #484848;
+}
+
+.user-badge.status-true {
+    background-color: rgba(78, 200, 30, 0.5);
+}
+
+.user-badge.status-false {
+    background-color: rgba(239, 45, 45, 0.5);
+}

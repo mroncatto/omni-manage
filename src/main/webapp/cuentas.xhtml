@@ -1,0 +1,150 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
+                xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui"
+                template="WEB-INF/layout/template.xhtml">
+
+    <ui:define name="head">
+        <!--        css and javascript here -->
+    </ui:define>
+
+
+    <ui:define name="content">
+        <div class="card crud-demo">
+            <h:form id="data">
+
+                <p:toolbar>
+                    <p:toolbarGroup>
+                        <p:commandButton value="Actualizar" icon="pi pi-sync"
+                                         actionListener="#{cuentasMB.buscarCuentas}"
+                                         styleClass="ui-button-info" style="margin-right: .5rem">
+                        </p:commandButton>
+                        <p:commandButton value="Nueva Cuenta" icon="pi pi-plus"
+                                         actionListener="#{cuentasMB.abrirNuevaCuenta}"
+                                         update=":dialogs:new-cuenta-content"
+                                         styleClass="ui-button-success" style="margin-right: .5rem">
+                        </p:commandButton>
+                    </p:toolbarGroup>
+                </p:toolbar>
+
+                <p:dataTable id="dt-cuentas" widgetVar="dtCuentas" var="cuenta"
+                             paginator="true" rows="10" paginatorPosition="bottom" emptyMessage="Sin registros."
+                             value="#{cuentasMB.cuentas}" styleClass="cuentas-table">
+
+                    <p:column headerText="Código" sortBy="#{cuenta.id}">
+                        <h:outputText value="#{cuenta.id}"/>
+                    </p:column>
+                    <p:column headerText="Descripción" sortBy="#{cuenta.descripcion}">
+                        <h:outputText style="font-weight: bold; color: #{cuenta.color}" value="#{cuenta.descripcion}"/>
+                    </p:column>
+                    <p:column headerText="Saldo inicial">
+                        <h:outputText value="#{cuenta.saldoInicial}">
+                            <f:convertNumber currencySymbol="G$" maxFractionDigits="0" locale="PY" type="currency"/>
+                        </h:outputText>
+                    </p:column>
+                    <p:column headerText="Situación" styleClass="text-center">
+                        <h:outputText styleClass="user-badge status-#{cuenta.activa}" value="#{cuenta.situacion()}"/>
+                    </p:column>
+                    <p:column exportable="false" ariaHeaderText="Actions">
+                        <p:commandButton icon="pi pi-pencil" update=":dialogs:update-cuenta-content"
+                                         oncomplete="PF('dialogoAlterarCuenta').show()" disabled="#{!cuenta.activa}"
+                                         styleClass="mr-2 edit-button rounded-button ui-button-success" process="@this">
+                            <f:setPropertyActionListener value="#{cuenta}" target="#{cuentasMB.cuentaSeleccionada}"/>
+                            <p:resetInput target=":dialogs:update-cuenta-content"/>
+                        </p:commandButton>
+                        <p:commandButton class="ui-button-warning rounded-button" icon="pi pi-trash"
+                                         process="@this" update=":dialogs:delete-cuenta-content"
+                                         oncomplete="PF('dialogoDeletaCuenta').show()" disabled="#{!cuenta.activa}">
+                            <f:setPropertyActionListener value="#{cuenta}" target="#{cuentasMB.cuentaSeleccionada}"/>
+                        </p:commandButton>
+                    </p:column>
+
+                </p:dataTable>
+
+            </h:form>
+
+            <h:form id="dialogs">
+                <p:dialog header="Nueva Cuenta" widgetVar="dialogoNuevaCuenta" minHeight="50" width="350"
+                          showEffect="fade" focus="@next"
+                          closeOnEscape="true" modal="true">
+
+                    <p:outputPanel id="new-cuenta-content" class="ui-fluid">
+                        <div class="field">
+                            <p:outputLabel>Descripción</p:outputLabel>
+                            <p:inputText autocomplete="off" value="#{cuentasMB.nuevaCuenta.descripcion}" required="true"
+                                         label="Descripcion"/>
+                        </div>
+                        <div class="field thumbnail">
+                            <p:outputLabel>Color</p:outputLabel>
+                            <p:colorPicker value="#{cuentasMB.pickColor}" theme="polaroid"
+                                           swatchesOnly="true" required="true" label="Color"
+                                           swatches="#{cuentasMB.palletColor}"/>
+                        </div>
+                        <div class="field">
+                            <p:outputLabel>Saldo Inicial</p:outputLabel>
+                            <p:inputNumber decimalPlaces="0" value="#{cuentasMB.nuevaCuenta.saldoInicial}"
+                                           required="true" label="Saldo Inicial"/>
+                        </div>
+                    </p:outputPanel>
+                    <f:facet name="footer">
+                        <p:commandButton onclick="PF('dialogoNuevaCuenta').hide()" type="button" value="Cerrar"
+                                         styleClass="ui-button-flat mr-2" style="width: 6rem"/>
+                        <p:commandButton actionListener="#{cuentasMB.salvarCuenta}" value="Salvar"
+                                         style="width: 5rem" update=":data:dt-cuentas"
+                                         process="new-cuenta-content @this"
+                                         oncomplete="PF('dialogoNuevaCuenta').hide()"/>
+                    </f:facet>
+                </p:dialog>
+                <p:dialog header="Alterar Cuenta" widgetVar="dialogoAlterarCuenta" minHeight="50" width="350"
+                          showEffect="fade" focus="@next"
+                          closeOnEscape="true" modal="true">
+
+                    <p:outputPanel id="update-cuenta-content" class="ui-fluid">
+                        <div class="field">
+                            <p:outputLabel>Código</p:outputLabel>
+                            <p:inputText disabled="true" value="#{cuentasMB.cuentaSeleccionada.id}"/>
+                        </div>
+                        <div class="field">
+                            <p:outputLabel>Descripción</p:outputLabel>
+                            <p:inputText autocomplete="off" value="#{cuentasMB.cuentaSeleccionada.descripcion}"
+                                         required="true" label="Descripcion"/>
+                        </div>
+                        <div class="field thumbnail">
+                            <p:outputLabel>Color</p:outputLabel>
+                            <p:colorPicker value="#{cuentasMB.pickColor}" theme="polaroid"
+                                           swatchesOnly="true" required="true" label="Color"
+                                           swatches="#{cuentasMB.palletColor}"/>
+                        </div>
+                        <div class="field">
+                            <p:outputLabel>Saldo Inicial</p:outputLabel>
+                            <p:inputNumber decimalPlaces="0" value="#{cuentasMB.cuentaSeleccionada.saldoInicial}"
+                                           required="true" label="Saldo Inicial"/>
+                        </div>
+                    </p:outputPanel>
+                    <f:facet name="footer">
+                        <p:commandButton onclick="PF('dialogoAlterarCuenta').hide()" type="button" value="Cerrar"
+                                         styleClass="ui-button-flat mr-2" style="width: 6rem"/>
+                        <p:commandButton actionListener="#{cuentasMB.alterarCuenta}" value="Salvar"
+                                         style="width: 5rem" update=":data:dt-cuentas"
+                                         process="update-cuenta-content @this"
+                                         oncomplete="PF('dialogoAlterarCuenta').hide()"/>
+                    </f:facet>
+                </p:dialog>
+                <p:confirmDialog id="delete-cuenta-content" widgetVar="dialogoDeletaCuenta" showEffect="fade"
+                                 width="400"
+                                 message="Inactivar #{cuentasMB.cuentaSeleccionada.descripcion}?" header="Confirmar"
+                                 severity="warn">
+                    <p:commandButton value="Si" icon="pi pi-check" actionListener="#{cuentasMB.inactivarCuenta()}"
+                                     process="@this" update=":data:dt-cuentas"
+                                     oncomplete="PF('dialogoDeletaCuenta').hide()"/>
+                    <p:commandButton value="No" type="button" styleClass="ui-button-secondary" icon="pi pi-times"
+                                     onclick="PF('dialogoDeletaCuenta').hide()"/>
+                </p:confirmDialog>
+            </h:form>
+
+        </div>
+    </ui:define>
+
+</ui:composition>
